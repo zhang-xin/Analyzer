@@ -64,15 +64,16 @@ class RSSReader:
         self.url = url
         self.error = False
         self._feed = None
-
         self.extractor = g_extractor.get(self.name, None)
-        if self.extractor is None:
-            self.error = True
 
         self.refresh()
 
     def refresh(self, timeout=30):
+        if self.extractor is None:
+            self.error = True
+            return
         try:
+            self.error = False
             r = requests.get(self.url, timeout=timeout)
             if r.status_code != 200:
                 self.error = True
@@ -82,6 +83,8 @@ class RSSReader:
             self.error = True
 
     def items(self):
+        if self.error:
+            raise StopIteration()
         for item in self._feed.entries:
             yield (item.title, item.link, item.published, self.extractor(item.link))
 
