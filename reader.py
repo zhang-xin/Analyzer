@@ -37,9 +37,24 @@ def ifanr_extractor(url, timeout=30):
         return None
 
 
+def _36kr_extractor(url, timeout=30):
+    try:
+        r = requests.get(url, timeout=timeout)
+        if r.status_code != 200:
+            return None
+        r.encoding = 'utf-8'
+        soup = BeautifulSoup(r.text, 'html.parser', from_encoding=r.encoding)
+
+        content = soup.find('section', class_='article')
+        return content.get_text()
+    except TimeoutError:
+        return None
+
+
 g_extractor = {
     'cnbeta': cnbeta_extractor,
     'ifanr': ifanr_extractor,
+    '36kr': _36kr_extractor,
 }
 
 
