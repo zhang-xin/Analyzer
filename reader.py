@@ -5,6 +5,8 @@ import feedparser
 import configparser
 import requests
 from bs4 import BeautifulSoup
+import dateutil.parser
+import dateutil.tz
 
 
 def cnbeta_extractor(url, timeout=30):
@@ -66,7 +68,13 @@ class RSSReader:
 
     def items(self):
         for item in self._feed.entries:
-            yield (item.title, item.link, self.extractor(item.link))
+            yield (item.title, item.link, item.published, self.extractor(item.link))
+
+    @staticmethod
+    def time_earlier(time1, time2):
+        last = dateutil.parser.parse(time1)
+        now = dateutil.parser.parse(time2)
+        return last < now
 
 
 if __name__ == '__main__':
@@ -77,5 +85,13 @@ if __name__ == '__main__':
         for site, rss_url in config[sect].items():
             print(site, rss_url)
             reader = RSSReader(site, rss_url)
+            s = "Wed, 29 Jul 2015 03:17:56 GMT"
             for it in reader.items():
-                print(it[0])
+                print('title:\n' + it[0])
+                print('link:\n' + it[1])
+                print('date:\n' + it[2])
+                print('content:\n' + it[3])
+                if reader.time_earlier(s, it[2]):
+                    print('earlier')
+                else:
+                    print('later')
