@@ -66,8 +66,6 @@ class RSSReader:
         self._feed = None
         self.extractor = g_extractor.get(self.name, None)
 
-        self.refresh()
-
     def refresh(self, timeout=30):
         if self.extractor is None:
             self.error = True
@@ -86,7 +84,10 @@ class RSSReader:
         if self.error:
             raise StopIteration()
         for item in self._feed.entries:
-            yield (item.title, item.link, item.published, self.extractor(item.link))
+            content = self.extractor(item.link)
+            if content is None:
+                continue
+            yield (item.title, item.link, item.published, content)
 
     @staticmethod
     def time_earlier(time1, time2):
@@ -98,18 +99,17 @@ class RSSReader:
 if __name__ == '__main__':
     config = configparser.ConfigParser()
     config.read('sites-config.ini')
-    for sect in config.sections():
-        print(sect)
-        for site, rss_url in config[sect].items():
-            print(site, rss_url)
-            reader = RSSReader(site, rss_url)
-            s = "Wed, 29 Jul 2015 03:17:56 GMT"
-            for it in reader.items():
-                print('title:\n' + it[0])
-                print('link:\n' + it[1])
-                print('date:\n' + it[2])
-                print('content:\n' + it[3])
-                if reader.time_earlier(s, it[2]):
-                    print('earlier')
-                else:
-                    print('later')
+    for site, rss_url in config['RSS'].items():
+        print(site, rss_url)
+        reader = RSSReader(site, rss_url)
+        reader.refresh()
+        s = "Wed, 29 Jul 2015 03:17:56 GMT"
+        for it in reader.items():
+            print('title:\n' + it[0])
+            print('link:\n' + it[1])
+            print('date:\n' + it[2])
+            print('content:\n' + it[3])
+            if reader.time_earlier(s, it[2]):
+                print('earlier')
+            else:
+                print('later')
