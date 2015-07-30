@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 
 
-import feedparser
 import configparser
+
+import feedparser
 import requests
 from bs4 import BeautifulSoup
 import dateutil.parser
 import dateutil.tz
 
 
-def cnbeta_extractor(url, timeout=30):
+def _cnbeta_extractor(url, timeout=30):
     try:
         r = requests.get(url, timeout=timeout)
         if r.status_code != 200:
@@ -23,7 +24,7 @@ def cnbeta_extractor(url, timeout=30):
         return None
 
 
-def ifanr_extractor(url, timeout=30):
+def _ifanr_extractor(url, timeout=30):
     try:
         r = requests.get(url, timeout=timeout)
         if r.status_code != 200:
@@ -51,9 +52,9 @@ def _36kr_extractor(url, timeout=30):
         return None
 
 
-g_extractor = {
-    'cnbeta': cnbeta_extractor,
-    'ifanr': ifanr_extractor,
+_g_extractor = {
+    'cnbeta': _cnbeta_extractor,
+    'ifanr': _ifanr_extractor,
     '36kr': _36kr_extractor,
 }
 
@@ -64,7 +65,7 @@ class RSSReader:
         self.url = url
         self.error = False
         self._feed = None
-        self.extractor = g_extractor.get(self.name, None)
+        self.extractor = _g_extractor.get(self.name, None)
 
     def refresh(self, timeout=30):
         if self.extractor is None:
