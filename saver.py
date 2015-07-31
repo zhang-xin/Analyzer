@@ -15,12 +15,12 @@ def _save_to_database(name, content, directory):
 
 
 _g_save_func = {
-    'files': _save_to_disk,
+    'disk': _save_to_disk,
     'database': _save_to_database,
 }
 
 
-def save(*sources, method='files', directory='data'):
+def save(*sources, method='disk', directory='data'):
     _save = _g_save_func.get(method, _save_to_disk)
     for source in sources:
         source.refresh()
