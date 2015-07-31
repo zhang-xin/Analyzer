@@ -20,7 +20,7 @@ def _cnbeta_extractor(url, timeout=30):
 
         content = soup.find('div', class_='content')
         return content.get_text()
-    except TimeoutError:
+    except requests.exceptions.RequestException:
         return None
 
 
@@ -34,7 +34,7 @@ def _ifanr_extractor(url, timeout=30):
 
         content = soup.find('div', itemprop='articleBody')
         return content.get_text()
-    except TimeoutError:
+    except requests.exceptions.RequestException:
         return None
 
 
@@ -48,7 +48,7 @@ def _36kr_extractor(url, timeout=30):
 
         content = soup.find('section', class_='article')
         return content.get_text()
-    except TimeoutError:
+    except requests.exceptions.RequestException:
         return None
 
 
