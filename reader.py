@@ -85,10 +85,13 @@ class RSSReader:
         if self.error:
             raise StopIteration()
         for item in self._feed.entries:
-            content = self.extractor(item.link)
-            if content is None:
-                continue
-            yield (item.title, item.link, item.published, content)
+            yield (item.title, item.link, item.published)
+
+    def get_article(self, link):
+        if self.extractor is None:
+            self.error = True
+            return None
+        return self.extractor(link)
 
     @staticmethod
     def time_earlier(time1, time2):
@@ -109,7 +112,9 @@ if __name__ == '__main__':
             print('title:\n' + it[0])
             print('link:\n' + it[1])
             print('date:\n' + it[2])
-            print('content:\n' + it[3])
+            content = reader.get_article(it[1])
+            if content is not None:
+                print('content:\n' + content)
             if reader.time_earlier(s, it[2]):
                 print('earlier')
             else:

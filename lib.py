@@ -6,14 +6,22 @@ import shutil
 import tempfile
 
 
-def save_file(name, content, path):
-    if not os.path.exists(path):
-        os.makedirs(path)
+def save_file(name, content):
+    if not os.path.exists(os.path.dirname(name)):
+        os.makedirs(os.path.dirname(name))
 
     f = tempfile.NamedTemporaryFile(mode='w+t', delete=False)
     f.write(content)
     f.close()
-    new_file = os.path.join(path, name)
-    if os.path.exists(new_file):
-        os.remove(new_file)
-    shutil.move(f.name, new_file)
+    if os.path.exists(name):
+        os.remove(name)
+    shutil.move(f.name, name)
+
+
+def file_exists(*path):
+    file = os.path.join(*path)
+    return os.path.exists(file)
+
+
+def path_join(*path):
+    return os.path.join(*path)
