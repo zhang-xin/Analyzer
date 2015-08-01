@@ -78,7 +78,7 @@ class RSSReader:
                 self.error = True
                 return
             self._feed = feedparser.parse(r.text)
-        except TimeoutError:
+        except requests.exceptions.RequestException:
             self.error = True
 
     def items(self):
