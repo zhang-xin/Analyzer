@@ -2,20 +2,16 @@
 
 import os
 import os.path
-import shutil
-import tempfile
 
 
 def save_file(name, content):
     if not os.path.exists(os.path.dirname(name)):
         os.makedirs(os.path.dirname(name))
 
-    f = tempfile.NamedTemporaryFile(mode='w+t', delete=False)
-    f.write(content)
-    f.close()
     if os.path.exists(name):
         os.remove(name)
-    shutil.move(f.name, name)
+    with open(name, 'w') as f:
+        f.write(content)
 
 
 def file_exists(*path):
