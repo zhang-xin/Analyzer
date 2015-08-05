@@ -22,6 +22,8 @@ def _cnbeta_extractor(url, timeout=30):
         return content.get_text()
     except requests.exceptions.RequestException:
         return None
+    except ConnectionError:
+        return None
 
 
 def _ifanr_extractor(url, timeout=30):
@@ -36,6 +38,8 @@ def _ifanr_extractor(url, timeout=30):
         return content.get_text()
     except requests.exceptions.RequestException:
         return None
+    except ConnectionError:
+        return None
 
 
 def _36kr_extractor(url, timeout=30):
@@ -49,6 +53,8 @@ def _36kr_extractor(url, timeout=30):
         content = soup.find('section', class_='article')
         return content.get_text()
     except requests.exceptions.RequestException:
+        return None
+    except ConnectionError:
         return None
 
 
@@ -79,6 +85,8 @@ class RSSReader:
                 return
             self._feed = feedparser.parse(r.text)
         except requests.exceptions.RequestException:
+            self.error = True
+        except ConnectionError:
             self.error = True
 
     def items(self):
