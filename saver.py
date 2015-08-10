@@ -37,10 +37,7 @@ def save(*sources, method='disk', directory='data'):
             if doc is None:
                 continue
 
-            content = 'Title:\n' + item[0] + '\n'
-            content += 'Link:\n' + item[1] + '\n'
-            content += 'Date:\n' + item[2] + '\n'
-            content += 'Content:\n' + doc + '\n'
+            content = {'Title': item[0], 'Link': item[1], 'Date': item[2], 'Content': doc}
             _save(name, content, path_join(directory, source.name))
 
 
