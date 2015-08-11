@@ -61,10 +61,26 @@ def _36kr_extractor(url, timeout=30):
         return None
 
 
+def _tongrenyuye_extractor(url, timeout=30):
+    try:
+        r = requests.get(url, timeout=timeout)
+        if r.status_code != 200:
+            return None
+        r.encoding = 'utf-8'
+        soup = BeautifulSoup(r.text, 'html.parser', from_encoding=r.encoding)
+
+        content = soup.find('div', class_='post-content clearfix')
+        return content.get_text()
+    except requests.exceptions.RequestException:
+        return None
+    except ConnectionError:
+        return None
+
 _g_extractor = {
     'cnbeta': _cnbeta_extractor,
     'ifanr': _ifanr_extractor,
     '36kr': _36kr_extractor,
+    '学而时嘻之': _tongrenyuye_extractor,
 }
 
 
