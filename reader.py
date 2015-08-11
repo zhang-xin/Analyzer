@@ -18,8 +18,11 @@ def _cnbeta_extractor(url, timeout=30):
         r.encoding = 'utf-8'
         soup = BeautifulSoup(r.text, 'html.parser', from_encoding=r.encoding)
 
+        content = soup.find('div', class_='introduction')
+        text = content.get_text()
         content = soup.find('div', class_='content')
-        return content.get_text()
+        text += content.get_text()
+        return text
     except requests.exceptions.RequestException:
         return None
     except ConnectionError:
