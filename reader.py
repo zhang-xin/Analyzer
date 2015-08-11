@@ -83,6 +83,7 @@ class RSSReader:
             if r.status_code != 200:
                 self.error = True
                 return
+            r.encoding = 'utf-8'
             self._feed = feedparser.parse(r.text)
         except requests.exceptions.RequestException:
             self.error = True
