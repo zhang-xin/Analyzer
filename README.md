@@ -35,7 +35,7 @@ $ deactivate
 - [ ] Extract chinese words from articles
 - [ ] Download theses of interests, articles on the web
 - [ ] Extract contents from PDF
-- [ ] Unify saved document format
+- [x] Unify saved document format
 - [ ] Analyze contents of articles
     - [ ] Relationship
     - [ ] Clusters: by companies, software/hardware, sources, contents
