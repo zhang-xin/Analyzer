@@ -2,6 +2,7 @@
 
 
 import configparser
+import socket
 
 import feedparser
 import requests
@@ -27,6 +28,8 @@ def _cnbeta_extractor(url, timeout=30):
         return None
     except ConnectionError:
         return None
+    except socket.timeout:
+        return None
 
 
 def _ifanr_extractor(url, timeout=30):
@@ -42,6 +45,8 @@ def _ifanr_extractor(url, timeout=30):
     except requests.exceptions.RequestException:
         return None
     except ConnectionError:
+        return None
+    except socket.timeout:
         return None
 
 
@@ -59,6 +64,8 @@ def _36kr_extractor(url, timeout=30):
         return None
     except ConnectionError:
         return None
+    except socket.timeout:
+        return None
 
 
 def _tongrenyuye_extractor(url, timeout=30):
@@ -75,12 +82,34 @@ def _tongrenyuye_extractor(url, timeout=30):
         return None
     except ConnectionError:
         return None
+    except socket.timeout:
+        return None
+
+
+def _linuxtoy_extractor(url, timeout=30):
+    try:
+        r = requests.get(url, timeout=timeout)
+        if r.status_code != 200:
+            return None
+        r.encoding = 'utf-8'
+        soup = BeautifulSoup(r.text, 'html.parser', from_encoding=r.encoding)
+
+        content = soup.find('div', class_='post-description')
+        return content.get_text()
+    except requests.exceptions.RequestException:
+        return None
+    except ConnectionError:
+        return None
+    except socket.timeout:
+        return None
+
 
 _g_extractor = {
     'cnbeta': _cnbeta_extractor,
     'ifanr': _ifanr_extractor,
     '36kr': _36kr_extractor,
     '学而时嘻之': _tongrenyuye_extractor,
+    'linuxtoy': _linuxtoy_extractor,
 }
 
 
@@ -108,12 +137,14 @@ class RSSReader:
             self.error = True
         except ConnectionError:
             self.error = True
+        except socket.timeout:
+            self.error = True
 
     def items(self):
         if self.error:
             raise StopIteration()
         for item in self._feed.entries:
-            yield (item.title, item.link, item.published)
+            yield (item.title, item.link, item.get('published', default=item.updated))
 
     def get_article(self, link):
         if self.extractor is None:
