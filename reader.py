@@ -20,9 +20,15 @@ def _cnbeta_extractor(url, timeout=30):
         soup = BeautifulSoup(r.text, 'html.parser', from_encoding=r.encoding)
 
         content = soup.find('div', class_='introduction')
-        text = content.get_text()
+        if content is not None:
+            text = content.get_text()
+        else:
+            text = ""
         content = soup.find('div', class_='content')
-        text += content.get_text()
+        if content is not None:
+            text += content.get_text()
+        else:
+            text += ""
         return text
     except requests.exceptions.RequestException:
         return None
@@ -41,7 +47,10 @@ def _ifanr_extractor(url, timeout=30):
         soup = BeautifulSoup(r.text, 'html.parser', from_encoding=r.encoding)
 
         content = soup.find('div', itemprop='articleBody')
-        return content.get_text()
+        if content is not None:
+            return content.get_text()
+        else:
+            return ""
     except requests.exceptions.RequestException:
         return None
     except ConnectionError:
@@ -59,7 +68,10 @@ def _36kr_extractor(url, timeout=30):
         soup = BeautifulSoup(r.text, 'html.parser', from_encoding=r.encoding)
 
         content = soup.find('section', class_='article')
-        return content.get_text()
+        if content is not None:
+            return content.get_text()
+        else:
+            return ""
     except requests.exceptions.RequestException:
         return None
     except ConnectionError:
@@ -77,7 +89,10 @@ def _tongrenyuye_extractor(url, timeout=30):
         soup = BeautifulSoup(r.text, 'html.parser', from_encoding=r.encoding)
 
         content = soup.find('div', class_='post-content clearfix')
-        return content.get_text()
+        if content is not None:
+            return content.get_text()
+        else:
+            return ""
     except requests.exceptions.RequestException:
         return None
     except ConnectionError:
@@ -95,7 +110,31 @@ def _linuxtoy_extractor(url, timeout=30):
         soup = BeautifulSoup(r.text, 'html.parser', from_encoding=r.encoding)
 
         content = soup.find('div', class_='post-description')
-        return content.get_text()
+        if content is not None:
+            return content.get_text()
+        else:
+            return ""
+    except requests.exceptions.RequestException:
+        return None
+    except ConnectionError:
+        return None
+    except socket.timeout:
+        return None
+
+
+def _paulgraham_extractor(url, timeout=30):
+    try:
+        r = requests.get(url, timeout=timeout)
+        if r.status_code != 200:
+            return None
+        soup = BeautifulSoup(r.text, 'lxml')
+
+        print(url)
+        content = soup.find('table', width=True)
+        if content is not None:
+            return content.get_text()
+        else:
+            return ""
     except requests.exceptions.RequestException:
         return None
     except ConnectionError:
@@ -110,6 +149,7 @@ _g_extractor = {
     '36kr': _36kr_extractor,
     '学而时嘻之': _tongrenyuye_extractor,
     'linuxtoy': _linuxtoy_extractor,
+    'paulgraham': _paulgraham_extractor,
 }
 
 
@@ -144,7 +184,10 @@ class RSSReader:
         if self.error:
             raise StopIteration()
         for item in self._feed.entries:
-            yield (item.title, item.link, item.get('published', default=item.updated))
+            date = item.get('published')
+            if date is None:
+                date = item.get('updated', default='')
+            yield (item.title, item.link, date)
 
     def get_article(self, link):
         if self.extractor is None:
