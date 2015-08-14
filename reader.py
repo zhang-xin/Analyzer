@@ -127,10 +127,73 @@ def _paulgraham_extractor(url, timeout=30):
         r = requests.get(url, timeout=timeout)
         if r.status_code != 200:
             return None
+        r.encoding = 'utf-8'
         soup = BeautifulSoup(r.text, 'lxml')
 
-        print(url)
         content = soup.find('table', width=True)
+        if content is not None:
+            return content.get_text()
+        else:
+            return ""
+    except requests.exceptions.RequestException:
+        return None
+    except ConnectionError:
+        return None
+    except socket.timeout:
+        return None
+
+
+def _buxulianxiang_extractor(url, timeout=30):
+    try:
+        r = requests.get(url, timeout=timeout)
+        if r.status_code != 200:
+            return None
+        r.encoding = 'utf-8'
+        soup = BeautifulSoup(r.text, 'html.parser')
+
+        content = soup.find('div', class_='entry')
+        if content is not None:
+            return content.get_text()
+        else:
+            return ""
+    except requests.exceptions.RequestException:
+        return None
+    except ConnectionError:
+        return None
+    except socket.timeout:
+        return None
+
+
+def _chedanji_extractor(url, timeout=30):
+    try:
+        r = requests.get(url, timeout=timeout)
+        if r.status_code != 200:
+            return None
+        r.encoding = 'utf-8'
+        soup = BeautifulSoup(r.text, 'html.parser')
+
+        content = soup.find('div', class_='entry-content')
+        if content is not None:
+            return content.get_text()
+        else:
+            return ""
+    except requests.exceptions.RequestException:
+        return None
+    except ConnectionError:
+        return None
+    except socket.timeout:
+        return None
+
+
+def _ruanyifeng_extractor(url, timeout=30):
+    try:
+        r = requests.get(url, timeout=timeout)
+        if r.status_code != 200:
+            return None
+        r.encoding = 'utf-8'
+        soup = BeautifulSoup(r.text, 'html.parser')
+
+        content = soup.find('div', id='main-content')
         if content is not None:
             return content.get_text()
         else:
@@ -150,6 +213,9 @@ _g_extractor = {
     '学而时嘻之': _tongrenyuye_extractor,
     'linuxtoy': _linuxtoy_extractor,
     'paulgraham': _paulgraham_extractor,
+    '不许联想': _buxulianxiang_extractor,
+    '扯氮集': _chedanji_extractor,
+    '阮一峰的网络日志': _ruanyifeng_extractor,
 }
 
 
@@ -214,9 +280,9 @@ if __name__ == '__main__':
             print('title:\n' + it[0])
             print('link:\n' + it[1])
             print('date:\n' + it[2])
-            content = reader.get_article(it[1])
-            if content is not None:
-                print('content:\n' + content)
+            c = reader.get_article(it[1])
+            if c is not None:
+                print('content:\n' + c)
             if reader.time_earlier(s, it[2]):
                 print('earlier')
             else:

@@ -31,7 +31,7 @@ $ deactivate
 ## Tasks
 
 - [x] Background service for continuously downloading articles from RSS
-- [ ] Add more RSS sources as not only technology sources
+- [x] Add more RSS sources as not only technology sources
 - [ ] Extract chinese words from articles
 - [ ] Download theses of interests, articles on the web
 - [ ] Extract contents from PDF
