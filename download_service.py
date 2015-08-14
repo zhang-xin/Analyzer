@@ -23,7 +23,7 @@ class DownloadService(Service):
         self.readers = []
         self.method = 'disk'
         self.directory = 'data'
-        self.time_interval = 15
+        self.time_interval = 30
 
     def run(self):
         self.logger.info("Analyzer: start analyzer download service")
