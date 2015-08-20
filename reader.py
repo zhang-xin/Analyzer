@@ -220,9 +220,10 @@ _g_extractor = {
 
 
 class RSSReader:
-    def __init__(self, name, url):
+    def __init__(self, name, url, language):
         self.name = name
         self.url = url
+        self.language = language
         self.error = False
         self._feed = None
         self.extractor = _g_extractor.get(self.name, None)
@@ -253,7 +254,7 @@ class RSSReader:
             date = item.get('published')
             if date is None:
                 date = item.get('updated', default='')
-            yield (item.title, item.link, date)
+            yield (item.title, item.link, date, self.language)
 
     def get_article(self, link):
         if self.extractor is None:
@@ -271,15 +272,17 @@ class RSSReader:
 if __name__ == '__main__':
     config = configparser.ConfigParser()
     config.read('sites-config.ini')
-    for site, rss_url in config['RSS'].items():
+    for site, detail in config['RSS'].items():
+        rss_url, lang = detail.split(' ')
         print(site, rss_url)
-        reader = RSSReader(site, rss_url)
+        reader = RSSReader(site, rss_url, lang)
         reader.refresh()
         s = "Wed, 29 Jul 2015 03:17:56 GMT"
         for it in reader.items():
             print('title:\n' + it[0])
             print('link:\n' + it[1])
             print('date:\n' + it[2])
+            print('language:\n' + it[3])
             c = reader.get_article(it[1])
             if c is not None:
                 print('content:\n' + c)

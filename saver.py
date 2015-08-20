@@ -37,11 +37,11 @@ def save(*sources, method='disk', directory='data'):
             if doc is None:
                 continue
 
-            content = {'Title': item[0], 'Link': item[1], 'Date': item[2], 'Content': doc}
+            content = {'Title': item[0], 'Link': item[1], 'Date': item[2], 'Language': item[3], 'Content': doc}
             _save(name, content, path_join(directory, source.name))
 
 
 if __name__ == '__main__':
     from reader import RSSReader
-    src = RSSReader('ifanr', 'http://www.ifanr.com/feed')
+    src = RSSReader('ifanr', 'http://www.ifanr.com/feed', 'chinese')
     save(src, method='disk')

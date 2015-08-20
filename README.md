@@ -32,7 +32,7 @@ $ deactivate
 
 - [x] Background service for continuously downloading articles from RSS
 - [x] Add more RSS sources as not only technology sources
-- [ ] Extract chinese words from articles
+- [x] Extract chinese words from articles
 - [ ] Download theses of interests, articles on the web
 - [ ] Extract contents from PDF
 - [x] Unify saved document format
@@ -40,7 +40,7 @@ $ deactivate
     - [ ] Relationship
     - [ ] Clusters: by companies, software/hardware, sources, contents
     - [ ] Trends
-    - [ ] Which source likes which topic
+    - [x] Which source likes which topic
 - [ ] Run analyze on contents from other datasets
 - [ ] Database support
 - [ ] Web UI or GUI to show the results

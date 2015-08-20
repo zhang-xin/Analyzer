@@ -61,8 +61,9 @@ def main():
 
     readers = []
 
-    for site, rss_url in config['RSS'].items():
-        readers.append(reader.RSSReader(site, rss_url))
+    for site, detail in config['RSS'].items():
+        rss_url, language = detail.split(' ')
+        readers.append(reader.RSSReader(site, rss_url, language))
 
     try:
         method = config['Storage']['method']
