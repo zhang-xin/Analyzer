@@ -3,6 +3,7 @@
 
 import configparser
 import socket
+import http.client as httplib
 
 import feedparser
 import requests
@@ -36,6 +37,8 @@ def _cnbeta_extractor(url, timeout=30):
         return None
     except socket.timeout:
         return None
+    except httplib.client.IncompleteRead:
+        return None
 
 
 def _ifanr_extractor(url, timeout=30):
@@ -56,6 +59,8 @@ def _ifanr_extractor(url, timeout=30):
     except ConnectionError:
         return None
     except socket.timeout:
+        return None
+    except httplib.client.IncompleteRead:
         return None
 
 
@@ -78,6 +83,8 @@ def _36kr_extractor(url, timeout=30):
         return None
     except socket.timeout:
         return None
+    except httplib.client.IncompleteRead:
+        return None
 
 
 def _tongrenyuye_extractor(url, timeout=30):
@@ -98,6 +105,8 @@ def _tongrenyuye_extractor(url, timeout=30):
     except ConnectionError:
         return None
     except socket.timeout:
+        return None
+    except httplib.client.IncompleteRead:
         return None
 
 
@@ -120,6 +129,8 @@ def _linuxtoy_extractor(url, timeout=30):
         return None
     except socket.timeout:
         return None
+    except httplib.client.IncompleteRead:
+        return None
 
 
 def _paulgraham_extractor(url, timeout=30):
@@ -140,6 +151,8 @@ def _paulgraham_extractor(url, timeout=30):
     except ConnectionError:
         return None
     except socket.timeout:
+        return None
+    except httplib.client.IncompleteRead:
         return None
 
 
@@ -162,6 +175,8 @@ def _buxulianxiang_extractor(url, timeout=30):
         return None
     except socket.timeout:
         return None
+    except httplib.client.IncompleteRead:
+        return None
 
 
 def _chedanji_extractor(url, timeout=30):
@@ -183,6 +198,8 @@ def _chedanji_extractor(url, timeout=30):
         return None
     except socket.timeout:
         return None
+    except httplib.client.IncompleteRead:
+        return None
 
 
 def _ruanyifeng_extractor(url, timeout=30):
@@ -203,6 +220,8 @@ def _ruanyifeng_extractor(url, timeout=30):
     except ConnectionError:
         return None
     except socket.timeout:
+        return None
+    except httplib.client.IncompleteRead:
         return None
 
 
@@ -245,6 +264,8 @@ class RSSReader:
         except ConnectionError:
             self.error = True
         except socket.timeout:
+            self.error = True
+        except httplib.client.IncompleteRead:
             self.error = True
 
     def items(self):
