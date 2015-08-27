@@ -12,217 +12,160 @@ import dateutil.parser
 import dateutil.tz
 
 
+def network_error_wrapper(function):
+    def wrapper(*args, **kwargs):
+        try:
+            return function(*args, **kwargs)
+        except requests.exceptions.RequestException:
+            return None
+        except ConnectionError:
+            return None
+        except socket.timeout:
+            return None
+        except httplib.client.IncompleteRead:
+            return None
+    return wrapper
+
+
+@network_error_wrapper
 def _cnbeta_extractor(url, timeout=30):
-    try:
-        r = requests.get(url, timeout=timeout)
-        if r.status_code != 200:
-            return None
-        r.encoding = 'utf-8'
-        soup = BeautifulSoup(r.text, 'html.parser', from_encoding=r.encoding)
+    r = requests.get(url, timeout=timeout)
+    if r.status_code != 200:
+        return None
+    r.encoding = 'utf-8'
+    soup = BeautifulSoup(r.text, 'html.parser', from_encoding=r.encoding)
 
-        content = soup.find('div', class_='introduction')
-        if content is not None:
-            text = content.get_text()
-        else:
-            text = ""
-        content = soup.find('div', class_='content')
-        if content is not None:
-            text += content.get_text()
-        else:
-            text += ""
-        return text
-    except requests.exceptions.RequestException:
-        return None
-    except ConnectionError:
-        return None
-    except socket.timeout:
-        return None
-    except httplib.client.IncompleteRead:
-        return None
+    content = soup.find('div', class_='introduction')
+    if content is not None:
+        text = content.get_text()
+    else:
+        text = ""
+    content = soup.find('div', class_='content')
+    if content is not None:
+        text += content.get_text()
+    else:
+        text += ""
+    return text
 
 
+@network_error_wrapper
 def _ifanr_extractor(url, timeout=30):
-    try:
-        r = requests.get(url, timeout=timeout)
-        if r.status_code != 200:
-            return None
-        r.encoding = 'utf-8'
-        soup = BeautifulSoup(r.text, 'html.parser', from_encoding=r.encoding)
+    r = requests.get(url, timeout=timeout)
+    if r.status_code != 200:
+        return None
+    r.encoding = 'utf-8'
+    soup = BeautifulSoup(r.text, 'html.parser', from_encoding=r.encoding)
 
-        content = soup.find('div', itemprop='articleBody')
-        if content is not None:
-            return content.get_text()
-        else:
-            return ""
-    except requests.exceptions.RequestException:
-        return None
-    except ConnectionError:
-        return None
-    except socket.timeout:
-        return None
-    except httplib.client.IncompleteRead:
-        return None
+    content = soup.find('div', itemprop='articleBody')
+    if content is not None:
+        return content.get_text()
+    else:
+        return ""
 
 
+@network_error_wrapper
 def _36kr_extractor(url, timeout=30):
-    try:
-        r = requests.get(url, timeout=timeout)
-        if r.status_code != 200:
-            return None
-        r.encoding = 'utf-8'
-        soup = BeautifulSoup(r.text, 'html.parser', from_encoding=r.encoding)
+    r = requests.get(url, timeout=timeout)
+    if r.status_code != 200:
+        return None
+    r.encoding = 'utf-8'
+    soup = BeautifulSoup(r.text, 'html.parser', from_encoding=r.encoding)
 
-        content = soup.find('section', class_='article')
-        if content is not None:
-            return content.get_text()
-        else:
-            return ""
-    except requests.exceptions.RequestException:
-        return None
-    except ConnectionError:
-        return None
-    except socket.timeout:
-        return None
-    except httplib.client.IncompleteRead:
-        return None
+    content = soup.find('section', class_='article')
+    if content is not None:
+        return content.get_text()
+    else:
+        return ""
 
 
+@network_error_wrapper
 def _tongrenyuye_extractor(url, timeout=30):
-    try:
-        r = requests.get(url, timeout=timeout)
-        if r.status_code != 200:
-            return None
-        r.encoding = 'utf-8'
-        soup = BeautifulSoup(r.text, 'html.parser', from_encoding=r.encoding)
+    r = requests.get(url, timeout=timeout)
+    if r.status_code != 200:
+        return None
+    r.encoding = 'utf-8'
+    soup = BeautifulSoup(r.text, 'html.parser', from_encoding=r.encoding)
 
-        content = soup.find('div', class_='post-content clearfix')
-        if content is not None:
-            return content.get_text()
-        else:
-            return ""
-    except requests.exceptions.RequestException:
-        return None
-    except ConnectionError:
-        return None
-    except socket.timeout:
-        return None
-    except httplib.client.IncompleteRead:
-        return None
+    content = soup.find('div', class_='post-content clearfix')
+    if content is not None:
+        return content.get_text()
+    else:
+        return ""
 
 
+@network_error_wrapper
 def _linuxtoy_extractor(url, timeout=30):
-    try:
-        r = requests.get(url, timeout=timeout)
-        if r.status_code != 200:
-            return None
-        r.encoding = 'utf-8'
-        soup = BeautifulSoup(r.text, 'html.parser', from_encoding=r.encoding)
+    r = requests.get(url, timeout=timeout)
+    if r.status_code != 200:
+        return None
+    r.encoding = 'utf-8'
+    soup = BeautifulSoup(r.text, 'html.parser', from_encoding=r.encoding)
 
-        content = soup.find('div', class_='post-description')
-        if content is not None:
-            return content.get_text()
-        else:
-            return ""
-    except requests.exceptions.RequestException:
-        return None
-    except ConnectionError:
-        return None
-    except socket.timeout:
-        return None
-    except httplib.client.IncompleteRead:
-        return None
+    content = soup.find('div', class_='post-description')
+    if content is not None:
+        return content.get_text()
+    else:
+        return ""
 
 
+@network_error_wrapper
 def _paulgraham_extractor(url, timeout=30):
-    try:
-        r = requests.get(url, timeout=timeout)
-        if r.status_code != 200:
-            return None
-        r.encoding = 'utf-8'
-        soup = BeautifulSoup(r.text, 'lxml')
+    r = requests.get(url, timeout=timeout)
+    if r.status_code != 200:
+        return None
+    r.encoding = 'utf-8'
+    soup = BeautifulSoup(r.text, 'lxml')
 
-        content = soup.find('table', width=True)
-        if content is not None:
-            return content.get_text()
-        else:
-            return ""
-    except requests.exceptions.RequestException:
-        return None
-    except ConnectionError:
-        return None
-    except socket.timeout:
-        return None
-    except httplib.client.IncompleteRead:
-        return None
+    content = soup.find('table', width=True)
+    if content is not None:
+        return content.get_text()
+    else:
+        return ""
 
 
+@network_error_wrapper
 def _buxulianxiang_extractor(url, timeout=30):
-    try:
-        r = requests.get(url, timeout=timeout)
-        if r.status_code != 200:
-            return None
-        r.encoding = 'utf-8'
-        soup = BeautifulSoup(r.text, 'html.parser')
+    r = requests.get(url, timeout=timeout)
+    if r.status_code != 200:
+        return None
+    r.encoding = 'utf-8'
+    soup = BeautifulSoup(r.text, 'html.parser')
 
-        content = soup.find('div', class_='entry')
-        if content is not None:
-            return content.get_text()
-        else:
-            return ""
-    except requests.exceptions.RequestException:
-        return None
-    except ConnectionError:
-        return None
-    except socket.timeout:
-        return None
-    except httplib.client.IncompleteRead:
-        return None
+    content = soup.find('div', class_='entry')
+    if content is not None:
+        return content.get_text()
+    else:
+        return ""
 
 
+@network_error_wrapper
 def _chedanji_extractor(url, timeout=30):
-    try:
-        r = requests.get(url, timeout=timeout)
-        if r.status_code != 200:
-            return None
-        r.encoding = 'utf-8'
-        soup = BeautifulSoup(r.text, 'html.parser')
+    r = requests.get(url, timeout=timeout)
+    if r.status_code != 200:
+        return None
+    r.encoding = 'utf-8'
+    soup = BeautifulSoup(r.text, 'html.parser')
 
-        content = soup.find('div', class_='entry-content')
-        if content is not None:
-            return content.get_text()
-        else:
-            return ""
-    except requests.exceptions.RequestException:
-        return None
-    except ConnectionError:
-        return None
-    except socket.timeout:
-        return None
-    except httplib.client.IncompleteRead:
-        return None
+    content = soup.find('div', class_='entry-content')
+    if content is not None:
+        return content.get_text()
+    else:
+        return ""
 
 
+@network_error_wrapper
 def _ruanyifeng_extractor(url, timeout=30):
-    try:
-        r = requests.get(url, timeout=timeout)
-        if r.status_code != 200:
-            return None
-        r.encoding = 'utf-8'
-        soup = BeautifulSoup(r.text, 'html.parser')
+    r = requests.get(url, timeout=timeout)
+    if r.status_code != 200:
+        return None
+    r.encoding = 'utf-8'
+    soup = BeautifulSoup(r.text, 'html.parser')
 
-        content = soup.find('div', id='main-content')
-        if content is not None:
-            return content.get_text()
-        else:
-            return ""
-    except requests.exceptions.RequestException:
-        return None
-    except ConnectionError:
-        return None
-    except socket.timeout:
-        return None
-    except httplib.client.IncompleteRead:
-        return None
+    content = soup.find('div', id='main-content')
+    if content is not None:
+        return content.get_text()
+    else:
+        return ""
 
 
 _g_extractor = {
