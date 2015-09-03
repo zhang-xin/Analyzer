@@ -168,6 +168,21 @@ def _ruanyifeng_extractor(url, timeout=30):
         return ""
 
 
+@network_error_wrapper
+def _coolshell_extractor(url, timeout=30):
+    r = requests.get(url, timeout=timeout)
+    if r.status_code != 200:
+        return None
+    r.encoding = 'utf-8'
+    soup = BeautifulSoup(r.text, 'html.parser')
+
+    content = soup.find('div', class_='post').findChild('div', class_='content')
+    if content is not None:
+        return content.get_text()
+    else:
+        return ""
+
+
 _g_extractor = {
     'cnbeta': _cnbeta_extractor,
     'ifanr': _ifanr_extractor,
@@ -178,6 +193,7 @@ _g_extractor = {
     '不许联想': _buxulianxiang_extractor,
     '扯氮集': _chedanji_extractor,
     '阮一峰的网络日志': _ruanyifeng_extractor,
+    'CoolShell': _coolshell_extractor,
 }
 
 
