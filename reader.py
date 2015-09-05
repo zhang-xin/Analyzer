@@ -234,7 +234,7 @@ class RSSReader:
             date = item.get('published')
             if date is None:
                 date = item.get('updated', default='')
-            yield (item.title, item.link, date, self.language)
+            yield (item.get('title', default=''), item.get('link', default=''), date, self.language)
 
     def get_article(self, link):
         if self.extractor is None:
