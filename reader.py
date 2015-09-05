@@ -193,7 +193,7 @@ _g_extractor = {
     '不许联想': _buxulianxiang_extractor,
     '扯氮集': _chedanji_extractor,
     '阮一峰的网络日志': _ruanyifeng_extractor,
-    'CoolShell': _coolshell_extractor,
+    'coolshell': _coolshell_extractor,
 }
 
 
