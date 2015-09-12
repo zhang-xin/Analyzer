@@ -22,7 +22,7 @@ def network_error_wrapper(function):
             return None
         except socket.timeout:
             return None
-        except httplib.client.IncompleteRead:
+        except httplib.IncompleteRead:
             return None
     return wrapper
 
@@ -224,7 +224,7 @@ class RSSReader:
             self.error = True
         except socket.timeout:
             self.error = True
-        except httplib.client.IncompleteRead:
+        except httplib.IncompleteRead:
             self.error = True
 
     def items(self):
