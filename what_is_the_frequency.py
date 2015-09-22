@@ -9,6 +9,7 @@ import configparser
 
 import nltk
 import jieba
+import matplotlib.pyplot as plt
 
 
 def keyword_frequency(keyword, directory):
@@ -33,6 +34,10 @@ def keyword_frequency(keyword, directory):
     sorted_list = sorted(freq_table, key=freq_table.get, reverse=True)
     print('=================')
     print("%s loves %s most." % (sorted_list[0], keyword))
+
+    plt.bar(range(len(freq_table)), freq_table.values(), align="center")
+    plt.xticks(range(len(freq_table)), list(freq_table.keys()))
+    plt.show()
 
 
 if __name__ == '__main__':
