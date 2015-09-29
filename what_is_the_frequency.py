@@ -10,23 +10,28 @@ import configparser
 import nltk
 import jieba
 import matplotlib.pyplot as plt
+from sklearn.feature_extraction.text import CountVectorizer
 
 
 def keyword_frequency(keyword, directory):
     freq_table = {}
 
     for source in glob.glob(os.path.join(directory, '*')):
-        words = []
+        words = ''
+        vect = CountVectorizer(ngram_range=(1, 3))
+        analyzer = vect.build_analyzer()
+
         for f in glob.glob(os.path.join(source, '*.json')):
             j = json.load(open(f))
             if j['Language'] == 'chinese':
-                words.extend(jieba.cut(j['Title']))
-                words.extend(jieba.cut(j['Content']))
+                words += ' '.join(jieba.cut(j['Title']))
+                words += ' '.join(jieba.cut(j['Content']))
             elif j['Language'] == 'english':
-                words.extend(nltk.word_tokenize(j['Title']))
-                words.extend(nltk.word_tokenize(j['Content']))
-        fdist = nltk.FreqDist(word.lower() for word in words)
-        freq = fdist.freq(keyword)
+                words += j['Title']
+                words += j['Content']
+        ngram_query = analyzer(words)
+        fdist = nltk.FreqDist(ngram_query)
+        freq = fdist.freq(keyword.lower())
         freq_table[os.path.basename(source)] = freq
 
     pprint.pprint(freq_table)
@@ -50,4 +55,4 @@ if __name__ == '__main__':
     config.read(args.config)
     dire = config['Storage']['directory']
 
-    keyword_frequency(args.keyword.lower(), dire)
+    keyword_frequency(args.keyword, dire)
