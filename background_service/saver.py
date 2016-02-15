@@ -2,7 +2,7 @@
 
 import hashlib
 
-from lib import save_file, file_exists, path_join
+from .lib import save_file, file_exists, path_join
 
 
 def _save_to_disk(name, content, directory):

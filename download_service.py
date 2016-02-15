@@ -10,8 +10,8 @@ import time
 
 from service import find_syslog, Service
 
-import reader
-import saver
+from background_service import reader
+from background_service import saver
 
 
 class DownloadService(Service):

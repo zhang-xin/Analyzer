@@ -1,0 +1,39 @@
+{% extends "bootstrap/base.html" %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/cover.css')}}">
+{% endblock %}
+
+{% block title %}Analyzer{% endblock %}
+
+{% block navbar %}
+{{ super() }}
+<div class="navbar navbar-fixed-top">
+  <!-- ... -->
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="site-wrapper">
+    <div class="site-wrapper-inner">
+        <div class="cover-container">
+            <div class="masthead clearfix">
+                <div class="inner">
+                    <a href="/"><h3 class="masthead-brand">Analyzer</h3></a>
+                    <nav>
+                        <ul class="nav masthead-nav">
+                            <li class="active"><a href="/">Home</a></li>
+                            <li><a href="#">Features</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="inner cover">
+                {% block page_content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
